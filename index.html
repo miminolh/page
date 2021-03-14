@@ -1,0 +1,138 @@
+<!--
+进无止境
+       Page Create By User
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta author="User">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+<head>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+    <!-- 酷播云配置文件 -->
+    <script src='//player.polyv.net/script/polyvplayer.min.js'></script>
+
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <!-- <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar">1</span>
+                <span class="icon-bar">1</span>
+                <span class="icon-bar">1</span>
+            </button>
+            <a class="navbar-brand" href="#">Vue.JS项目及视频展示区</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">别点<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </nav>
+
+    <div class="jumbotron" style="margin-top: 8rem">
+        <h1>鸣谢</h1>
+        <p>视频分发由酷播云提供技术支持</p>
+    </div>
+
+    <div class="panel panel-success">
+        <div class="panel-heading text-center">
+            <strong class="panel-title">视频</strong>
+        </div>
+        <div class="panel-body">
+            <div class="row video-template">
+                <!-- 内容部分 -->
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>-->
+<script id="temp" type="text/html">
+    <div class="col-md-4 col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">平板视频</h3>
+            </div>
+            <div class="panel-body">
+                <div class="vid"></div>
+            </div>
+            <div class="panel-footer">
+                <div class="panel-time-ipad samll"></div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    $(document).ready(() => {
+        //生产模板
+        var tem = $('#temp').html()
+
+        //请求数据
+        $.ajax({
+            type: "GET", //规定传输方式
+            url: "http://www.usercode.co:3000/api/getVideosInformation",
+            success: result => {
+                console.log(result[0].vid)
+                console.log(result)
+                let array = []
+                createVideo(result,array)
+            },
+            error: result =>{
+                console.log(result)
+                alert(result)
+            }
+        });
+
+        //渲染页面
+        function createVideo(result,arrays) {
+            for (let i = 0; i < result.length; i++) {
+                $('.video-template').append(tem)
+                let plv;
+                let obj = plv+i
+                let newVar = $('.vid').get(i)
+                obj = polyvObject(newVar).videoPlayer({
+                    'width': '320',
+                    'height': '200',
+                    'vid': result[i].vid,
+                    'forceH5': true
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>
